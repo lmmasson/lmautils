@@ -71,15 +71,12 @@ echo "$PLAYER ${PLAY_PREFIX}${PLAY_NB}${PLAY_END}"
 
 if [ "$LOOP" == "yes" ] ; then
 	while [ 1 ] ; do
-		nb=`printf "$PLAY_NBST" ${PLAY_NB}`
-		$PLAYER "${PLAY_PREFIX}${nb}${PLAY_END}"
+		$PLAYER ${PLAY_PREFIX}`printf $PLAY_NBST ${PLAY_NB}`${PLAY_END}
 		sleep $SLEEP
 		printf $PLAY_NBST `expr $PLAY_NB + 1` > $NBFILE
-		read PLAY_NB < $NBFILE
 	done
 else
-		nb=`printf "$PLAY_NBST" ${PLAY_NB}`
-		$PLAYER "${PLAY_PREFIX}${nb}${PLAY_END}"
+		$PLAYER ${PLAY_PREFIX}`printf $PLAY_NBST ${PLAY_NB}`${PLAY_END}
 		printf $PLAY_NBST `expr $PLAY_NB + 1` > $NBFILE
 	
 fi
