@@ -1,0 +1,55 @@
+
+"Default Config
+set nu
+set smartindent
+set wildmenu
+set mouse=a
+"don't forget to use MAJ for mouse copy/paste
+
+"To save file
+nnoremap <c-w> :w<CR>
+nnoremap <silent> <F2> :w<CR>
+
+"For build and build error managment
+function! ToggleMake()
+	if exists("g:qfix_make_win")
+		cclose
+		unlet g:qfix_make_win
+	else
+		let g:qfix_make_win = bufnr("$")
+		w
+		make
+		copen
+	endif
+endfunction
+
+"For pattern grep
+function ToggleGrep(local)
+	if exists("g:qfix_grep_win")
+		cclose
+		unlet g:qfix_grep_win
+	else
+		let g:qfix_grep_win = bufnr("$")
+		let wordUnderCursor = expand("<cword>")
+		if a:local == 1
+			let file = expand("%:p")
+		else
+			let file = "*"
+		endif
+
+		exe "vimgrep /".wordUnderCursor."/ ".file
+"		echom a:pattern
+		copen
+	endif
+endfunction
+
+	
+nnoremap <silent> <F5> :call ToggleMake()<CR>
+nnoremap <silent> <F6> :cp<CR>
+nnoremap <silent> <F7> :cn<CR>
+nnoremap <silent> <F8> :call ToggleGrep(1)<CR>
+nnoremap <silent> <s-F8> :call ToggleGrep(0)<CR>
+
+"For ctags
+nnoremap <silent> <F9> :TlistToggle<CR>
+nnoremap <silent> <F12> :exe "tag ". expand("<cword>")<CR>
