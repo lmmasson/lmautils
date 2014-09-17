@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+#FFMPGBIN=/usr/local/bin/ffmpeg
+BINFILE=mencoder
+FORMAT=avi
+VIDEOCODEC=h264
+#AUDIOCODEC=ac3
+AUDIOCODEC=aac
+VIDEOBITRATE=1 # in Mbytes/s
+VBITRATE=`expr $VIDEOBITRATE \* 8 \* 1024 \* 1024 ` # automatic convertion from MBytes/s to bits/s
+VBT=`expr $VBITRATE / 8`
+ABITRATE=512 #in kbits/s
+EXTRAOPT="-deinterlace -y " 
+
+function printhelp {
+        echo "usage : fencode input_file outputfile"
+        exit
+}
+
+
+if [ ! -f "$1" ]; then
+	printhelp
+	exit
+fi
+
+if [ "$2" == "" ]; then
+	printhelp
+	exit
+fi
+
+echo
+echo "Uses options :"
+echo "  bin=$FFMPGBIN"
+echo "  format=$FORMAT"
+echo "  vcodec=$VIDEOCODEC"
+echo "  acodec=$AUDIOCODEC"
+echo "  vbrate=$VBITRATE kbits/s"
+echo "  vbtolerence=$VBT kbits/s"
+echo "  abrate=$ABITRATE kbits/s"
+echo "  extra options = $EXTRAOPT"
+echo
+
+CMD="$BINFILE "$1" -oac $AUDIOCODEC -ovc $VIDEOCODEC  $EXTRAOPT -o $2"
+
+
+echo $CMD
+$CMD
