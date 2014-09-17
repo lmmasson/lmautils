@@ -1,0 +1,85 @@
+#!/bin/bash
+set -x
+
+function Usage()
+{
+		echo "pplay [OPTION]"
+		echo "play next file of a video serie"
+		echo ""
+		echo "[OPTION] :"
+		echo "  -h or --help :     display this help"
+		echo "  -c or --config :   new configuration (default if no configuration file)"
+		echo "  -l or --loop :     play all video files"
+		echo "  -p or --previous : play starting from the previous file"
+		exit 0
+}
+
+
+RCFILE=.pplayrc
+NBFILE=.pplaynb
+
+SLEEP=2
+FORCECONF=no
+LOOP=no
+PREV=no
+
+case $1 in 
+	-h | --help) Usage ;;
+	-c | --config) FORCECONF=yes ;;
+	-l | --loop) LOOP=yes ;;
+	-p | --previous) PREV=yes;;
+esac
+
+if [ -e "$RCFILE" ] && [ "$FORCECONF" == "no" ]; then
+	. $RCFILE
+else
+	ls
+	echo "Enter begining of the name (before number) :"
+	read PLAY_PREFIX
+	echo "Enter initial number :"
+	read PLAY_NB
+	echo "Enter end of name (after number) :"
+	read PLAY_END
+	echo "Enter player to use :"
+	read PLAYER
+	echo "Enter printf pattern for number (%02d):"
+	read PLAY_NBST
+	
+	echo "#### Ressource file for player command (lmasson) ####" > $RCFILE
+	echo "export PLAY_PREFIX=\"$PLAY_PREFIX\"" >> $RCFILE
+	echo "export PLAY_END=\"$PLAY_END\"" >> $RCFILE
+	echo "export PLAYER=\"$PLAYER\"" >> $RCFILE
+	echo "export PLAY_NBST=\"$PLAY_NBST\"" >> $RCFILE
+	echo "$PLAY_NB" > $NBFILE
+
+fi
+
+if [ ! -e "$NBFILE" ] || [ "$FORCECONF" == "yes" ]; then
+	echo "Enter initial number :"
+	read PLAY_NB
+	echo "$PLAY_NB" > $NBFILE
+else
+	read PLAY_NB < $NBFILE
+fi
+
+if [ "$PREV" == "yes" ]; then
+		printf $PLAY_NBST `expr $PLAY_NB - 1` > $NBFILE
+		read PLAY_NB < $NBFILE
+fi
+	
+echo "$PLAYER ${PLAY_PREFIX}${PLAY_NB}${PLAY_END}"
+
+if [ "$LOOP" == "yes" ] ; then
+	while [ 1 ] ; do
+		nb=`printf "$PLAY_NBST" ${PLAY_NB}`
+		$PLAYER "${PLAY_PREFIX}${nb}${PLAY_END}"
+		sleep $SLEEP
+		printf $PLAY_NBST `expr $PLAY_NB + 1` > $NBFILE
+		read PLAY_NB < $NBFILE
+	done
+else
+		nb=`printf "$PLAY_NBST" ${PLAY_NB}`
+		$PLAYER "${PLAY_PREFIX}${nb}${PLAY_END}"
+		printf $PLAY_NBST `expr $PLAY_NB + 1` > $NBFILE
+	
+fi
