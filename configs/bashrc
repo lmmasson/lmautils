@@ -1,0 +1,44 @@
+alias less='less -R'
+
+alias l=ls
+alias ll='ls -lh'
+alias la='ls -a'
+alias lS='ls -rlhS'
+alias lt='ls -rlht'
+
+alias s='cd ..'
+alias p='cd -'
+
+#alias apts='apt-cache search'
+alias apti='sudo apt-get install'
+alias aptup='sudo apt-get update; sudo apt-get upgrade'
+
+alias vi=vim
+alias f='find . | grep --color=auto '
+alias g='grep -nrH --color=always * -e'
+alias c='grep -nrH --color=always *.c -e'
+alias h='grep -nrH --color=always *.h -e'
+
+alias df='df -h -T -x tmpfs -x devtmpfs'
+
+alias cdw='cd /home/lmasson/work'
+alias cdp='cd /home/lmasson/Documents/Wyplay/Projets/'
+
+alias genbox='sudo /opt/genbox-ng/bin/genbox-ng'
+
+alias m='sudo minicom -c on -w'
+
+declare -a STB=( 0 $(</home/lmasson/work/Leon/tools/leon/update/wall12.txt))
+
+export PATH=$PATH:/home/lmasson/work/bin
+#export PATH=$PATH:/opt/STM/STLinux-2.3/devkit/sh4/bin/
+
+alias sh4='source /opt/TP/resultats/TP05-kernel/sh4.sh'
+
+
+#git
+alias gs='git status'
+alias gd='git diff'
+alias gc='git commit'
+alias ga='git add'
+alias gq='qgit&'
