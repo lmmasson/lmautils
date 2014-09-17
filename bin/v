@@ -1,0 +1,7 @@
+#!/bin/bash
+
+vedit () {
+	vim $1 $2
+}
+
+vedit	`echo $1 | awk -F":" '{ print $1 " +"$2 }'`
